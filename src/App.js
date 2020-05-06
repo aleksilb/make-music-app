@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import plingSound from './pling.wav';
 
 function App() {
     return (
@@ -14,13 +15,20 @@ function App() {
 function TaskHandler() {
     const [task, setTask] = useState(null);
 
+    const handleNewTask = function (task) {
+        let audio = new Audio(plingSound);
+        audio.play();
+        setTask(task);
+    };
+
     const waitForNext = function () {
         setTask(null);
         waitForTasks('test', response => {
-            setTask(response);
-            console.log(task);
+            handleNewTask(response);
         });
     };
+
+    useEffect(waitForNext,[]);
 
     const getComponent = function (task) {
         switch (task.taskDefinitionKey) {
@@ -36,8 +44,6 @@ function TaskHandler() {
                 return null;
         }
     };
-
-    useEffect(waitForNext,[]);
 
     const doTask = variables => {
         const body = variables != null ? JSON.stringify(variables) : null;
@@ -111,7 +117,7 @@ function waitForTasks(key, callback) {
     let tasks = [];
 
     const callApi = function () {
-        fetch("http://localhost:8080/engine-rest/task?processDefinitionKey=make_loop")
+        fetch("http://localhost:8080/engine-rest/task?businessKey=make_loop")
             .then(res => res.json())
             .then(
                 (result) => {
