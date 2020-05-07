@@ -9,28 +9,25 @@ function App() {
     );
 }
 
-/**
- * @return {null}
- */
 function TaskHandler() {
     const [task, setTask] = useState(null);
 
-    const handleNewTask = function (task) {
+    const handleNewTask = newTask => {
+        setTask(newTask);
         let audio = new Audio(plingSound);
         audio.play();
-        setTask(task);
     };
 
-    const waitForNext = function () {
+    const waitForNext = () => {
         setTask(null);
-        waitForTasks('test', response => {
+        waitForTasks('test-song', response => {
             handleNewTask(response);
         });
     };
 
     useEffect(waitForNext,[]);
 
-    const getComponent = function (task) {
+    const getComponent = task => {
         switch (task.taskDefinitionKey) {
             case 'how-many-loops':
                 return HowManyLoopsTask;
@@ -56,7 +53,6 @@ function TaskHandler() {
 
         fetch("http://localhost:8080/engine-rest/task/" + task.id + "/complete", callProperties)
             .then((response) => {
-                console.log(response);
                 waitForNext();
             });
     };
@@ -113,24 +109,23 @@ function NumberButtons(props) {
 }
 
 function waitForTasks(key, callback) {
-    const pollIntervalMs = 2000;
-    let tasks = [];
+    const startIntervalMs = 100;
+    const pollIntervalMs = 1000;
 
     const callApi = function () {
-        fetch("http://localhost:8080/engine-rest/task?businessKey=make_loop")
+        fetch("http://localhost:8080/engine-rest/task?processInstanceBusinessKey=" + key)
             .then(res => res.json())
             .then(
                 (result) => {
-                    tasks = result;
+                    let tasks = result;
+                    if (tasks.length > 0) {
+                        callback(tasks[0]);
+                    } else {
+                        setTimeout(callApi, pollIntervalMs);
+                    }
                 });
-
-        if (tasks.length > 0) {
-            callback(tasks[0]);
-        } else {
-            return setTimeout(callApi, pollIntervalMs);
-        }
     };
-    callApi();
+    setTimeout(callApi, startIntervalMs);
 }
 
 export default App;
