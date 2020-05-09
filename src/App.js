@@ -2,14 +2,66 @@ import React, {useEffect, useState} from 'react';
 import plingSound from './pling.wav';
 
 function App() {
+    const [song, setSong] = useState(null);
+
+    const songCreated = newSong => {
+        startSong(newSong);
+    };
+
+    const startSong = startSong => {
+        const callProperties = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'}
+        };
+
+        fetch("http://localhost:8080/make-music/song/" + startSong.id + "/start", callProperties)
+            .then(() => {
+                setSong(startSong)
+            });
+    }
+
     return (
         <div className="App">
-            <TaskHandler/>
+            {song != null ? <TaskHandler song={song}/> : <NewSong handleCreate={songCreated}/>}
         </div>
     );
 }
 
-function TaskHandler() {
+function NewSong(props) {
+    const [songName, setSongName] = useState('');
+
+    const createSong = songName => {
+        const body = JSON.stringify({name : songName});
+
+        const callProperties = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: body
+        };
+
+        fetch("http://localhost:8080/make-music/song", callProperties)
+            .then(res => res.json())
+            .then(song => {
+                props.handleCreate(song);
+            });
+    };
+
+    const handleNameChange = event => {
+        setSongName(event.target.value);
+    };
+
+    const handleSubmit = event => {
+        createSong(songName);
+        event.preventDefault();
+    };
+
+    return <form onSubmit={handleSubmit}>
+        <input type='text' value={songName} onChange={handleNameChange}/>
+        <input type="submit" value="Start song" />
+    </form>
+}
+
+function TaskHandler(props) {
     const [task, setTask] = useState(null);
 
     const handleNewTask = newTask => {
@@ -20,7 +72,7 @@ function TaskHandler() {
 
     const waitForNext = () => {
         setTask(null);
-        waitForTasks('test-song', response => {
+        waitForTasks(props.song.id, response => {
             handleNewTask(response);
         });
     };
@@ -28,6 +80,8 @@ function TaskHandler() {
     useEffect(waitForNext,[]);
 
     const getComponent = task => {
+        if(task == null) return null;
+
         switch (task.taskDefinitionKey) {
             case 'how-many-loops':
                 return HowManyLoopsTask;
@@ -52,17 +106,15 @@ function TaskHandler() {
         };
 
         fetch("http://localhost:8080/engine-rest/task/" + task.id + "/complete", callProperties)
-            .then((response) => {
+            .then(() => {
                 waitForNext();
             });
     };
 
-    if (task == null) {
-        return <div>No tasks</div>
-    } else {
-        const TaskComponent = getComponent(task);
-        return <div><TaskComponent doTask={doTask}/></div>
-    }
+    const TaskComponent = getComponent(task);
+    return <div>
+        <div>Song: {props.song.name}</div>
+        {TaskComponent != null ? <TaskComponent doTask={doTask}/> : "No tasks"}</div>
 }
 
 function StartMakingLoopsTask(props) {
@@ -108,9 +160,10 @@ function NumberButtons(props) {
     return numbers.map(amount => <button onClick={handleClick.bind(this, amount.value)}>{amount.title}</button>);
 }
 
-function waitForTasks(key, callback) {
+function waitForTasks(id, callback) {
     const startIntervalMs = 100;
     const pollIntervalMs = 1000;
+    const key = 'song-' + id;
 
     const callApi = function () {
         fetch("http://localhost:8080/engine-rest/task?processInstanceBusinessKey=" + key)
