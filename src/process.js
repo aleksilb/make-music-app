@@ -41,7 +41,9 @@ export function doTask(taskId, variables, callback) {
         });
 }
 
-export function getTasks(key, successCallback, failCallback) {
+export function getTasks(songId, successCallback, failCallback) {
+    const key = 'song-' + songId;
+
     fetch("http://localhost:8080/engine-rest/task?processInstanceBusinessKey=" + key)
         .then(res => res.json())
         .then(
