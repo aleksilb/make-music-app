@@ -9,9 +9,13 @@ function App() {
         setSong(song);
     }
 
+    const songStopHandler = () => {
+        setSong(null);
+    }
+
     return (
         <div className="App">
-            {song != null ? <TaskPage song={song}/> : <SongPage songSelectHandler={songSelectHandler}/>}
+            {song != null ? <TaskPage song={song} songStopHandler={songStopHandler}/> : <SongPage songSelectHandler={songSelectHandler}/>}
         </div>
     );
 }

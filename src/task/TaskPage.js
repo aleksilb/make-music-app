@@ -5,6 +5,7 @@ function TaskPage(props) {
     return (
         <div>
             <div>Song: {props.song.name}</div>
+            <button onClick={props.songStopHandler}>Stop doing this song</button>
             <TaskHandler song={props.song}/>
         </div>
     );
