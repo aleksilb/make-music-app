@@ -27,9 +27,7 @@ function TaskHandler(props) {
     };
 
     const TaskComponent = (task != null) ? getTaskComponent(task.taskDefinitionKey) : null;
-    return <div>
-        <div>Song: {song.name}</div>
-        {TaskComponent != null ? <TaskComponent doTask={doTask}/> : "No tasks"}</div>
+    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask}/> : "Waiting for next task"}</div>
 }
 
 function getTaskComponent(taskKey) {

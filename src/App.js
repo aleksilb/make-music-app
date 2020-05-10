@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import TaskHandler from "./task/TaskHandler";
 import SongPage from "./song/SongPage";
+import TaskPage from "./task/TaskPage";
 
 function App() {
     const [song, setSong] = useState(null);
@@ -11,7 +11,7 @@ function App() {
 
     return (
         <div className="App">
-            {song != null ? <TaskHandler song={song}/> : <SongPage songSelectHandler={songSelectHandler}/>}
+            {song != null ? <TaskPage song={song}/> : <SongPage songSelectHandler={songSelectHandler}/>}
         </div>
     );
 }
