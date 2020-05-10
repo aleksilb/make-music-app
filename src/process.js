@@ -56,3 +56,13 @@ export function getTasks(songId, successCallback, failCallback) {
                 }
             });
 }
+
+export function getSongs(callback) {
+    fetch("http://localhost:8080/make-music/song")
+        .then(res => res.json())
+        .then(
+            (result) => {
+                let songs = result;
+                callback(songs);
+            });
+}
