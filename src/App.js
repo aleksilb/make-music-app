@@ -1,5 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import plingSound from './pling.wav';
+import * as process from './process.js';
 
 function App() {
     const [song, setSong] = useState(null);
@@ -8,16 +9,8 @@ function App() {
         startSong(newSong);
     };
 
-    const startSong = startSong => {
-        const callProperties = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'}
-        };
-
-        fetch("http://localhost:8080/make-music/song/" + startSong.id + "/start", callProperties)
-            .then(() => {
-                setSong(startSong)
-            });
+    const startSong = song => {
+        process.startSong(song.id, () => {setSong(song)});
     }
 
     return (
@@ -31,19 +24,9 @@ function NewSong(props) {
     const [songName, setSongName] = useState('');
 
     const createSong = songName => {
-        const body = JSON.stringify({name : songName});
-
-        const callProperties = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: body
-        };
-
-        fetch("http://localhost:8080/make-music/song", callProperties)
-            .then(res => res.json())
-            .then(song => {
-                props.handleCreate(song);
-            });
+        process.createSong(songName, song => {
+            props.handleCreate(song);
+        });
     };
 
     const handleNameChange = event => {
@@ -63,6 +46,7 @@ function NewSong(props) {
 
 function TaskHandler(props) {
     const [task, setTask] = useState(null);
+    let song = props.song;
 
     const handleNewTask = newTask => {
         setTask(newTask);
@@ -72,7 +56,7 @@ function TaskHandler(props) {
 
     const waitForNext = () => {
         setTask(null);
-        waitForTasks(props.song.id, response => {
+        waitForTasks(song.id, response => {
             handleNewTask(response);
         });
     };
@@ -97,23 +81,12 @@ function TaskHandler(props) {
     };
 
     const doTask = variables => {
-        const body = variables != null ? JSON.stringify(variables) : null;
-
-        const callProperties = {
-            method: 'POST',
-            headers: {'Content-Type': 'application/json'},
-            body: body
-        };
-
-        fetch("http://localhost:8080/engine-rest/task/" + task.id + "/complete", callProperties)
-            .then(() => {
-                waitForNext();
-            });
+        process.doTask(task.id, variables, () => {waitForNext();});
     };
 
     const TaskComponent = getComponent(task);
     return <div>
-        <div>Song: {props.song.name}</div>
+        <div>Song: {song.name}</div>
         {TaskComponent != null ? <TaskComponent doTask={doTask}/> : "No tasks"}</div>
 }
 
@@ -166,17 +139,9 @@ function waitForTasks(id, callback) {
     const key = 'song-' + id;
 
     const callApi = function () {
-        fetch("http://localhost:8080/engine-rest/task?processInstanceBusinessKey=" + key)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    let tasks = result;
-                    if (tasks.length > 0) {
-                        callback(tasks[0]);
-                    } else {
-                        setTimeout(callApi, pollIntervalMs);
-                    }
-                });
+        process.getTasks(key,
+            (tasks) => {callback(tasks[0])},
+            () => {setTimeout(callApi, pollIntervalMs)});
     };
     setTimeout(callApi, startIntervalMs);
 }
