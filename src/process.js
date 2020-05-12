@@ -1,10 +1,13 @@
+const CAMUNDA_API_URL = "http://localhost:8010/proxy/rest";
+const API_URL = "http://localhost:8010/proxy";
+
 export function startSong(id, callback) {
     const callProperties = {
         method: 'POST',
         headers: {'Content-Type': 'application/json'}
     };
 
-    fetch("http://localhost:8080/make-music/song/" + id + "/start", callProperties)
+    fetch(API_URL + "/song/" + id + "/start", callProperties)
         .then(() => {
             callback();
         });
@@ -19,7 +22,7 @@ export function createSong(name, callback) {
         body: body
     };
 
-    fetch("http://localhost:8080/make-music/song", callProperties)
+    fetch(API_URL + "/song", callProperties)
         .then(res => res.json())
         .then(song => {
             callback(song);
@@ -35,7 +38,7 @@ export function doTask(taskId, variables, callback) {
         body: body
     };
 
-    fetch("http://localhost:8080/engine-rest/task/" + taskId + "/complete", callProperties)
+    fetch(CAMUNDA_API_URL + "/task/" + taskId + "/complete", callProperties)
         .then(() => {
             callback();
         });
@@ -44,7 +47,7 @@ export function doTask(taskId, variables, callback) {
 export function getTasks(songId, successCallback, failCallback) {
     const key = 'song-' + songId;
 
-    fetch("http://localhost:8080/engine-rest/task?processInstanceBusinessKey=" + key)
+    fetch(CAMUNDA_API_URL + "/task?processInstanceBusinessKey=" + key)
         .then(res => res.json())
         .then(
             (result) => {
@@ -58,11 +61,10 @@ export function getTasks(songId, successCallback, failCallback) {
 }
 
 export function getSongs(callback) {
-    fetch("http://localhost:8080/make-music/song")
+    fetch(API_URL + "/song")
         .then(res => res.json())
         .then(
             (result) => {
-                let songs = result;
-                callback(songs);
+                callback(result);
             });
 }
