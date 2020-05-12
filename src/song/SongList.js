@@ -9,7 +9,7 @@ function SongList(props) {
         process.getSongs(songs => {
             setSongs(songs);
         })
-    });
+    }, []);
 
     const selectSong = song => {
         songSelectHandler(song);
