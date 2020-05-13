@@ -44,7 +44,7 @@ export function doTask(taskId, variables, callback) {
         });
 }
 
-export function getTasks(songId, successCallback, failCallback) {
+export function getSongTasks(songId, successCallback, failCallback) {
     const key = 'song-' + songId;
 
     fetch(CAMUNDA_API_URL + "/task?processInstanceBusinessKey=" + key)

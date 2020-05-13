@@ -1,11 +1,11 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import plingSound from "../pling.wav";
 import * as process from "../process";
 import {HowManyLoopsTask, StartMakingLoopsTask, ChooseBestTask, DeleteLoopsTask} from "./Tasks";
 
-function TaskHandler(props) {
+function TaskHandler({song}) {
     const [task, setTask] = useState(null);
-    let song = props.song;
+    const timerRef = useRef(null);
 
     const handleNewTask = newTask => {
         setTask(newTask);
@@ -13,17 +13,24 @@ function TaskHandler(props) {
         audio.play();
     };
 
-    const waitForNext = () => {
-        setTask(null);
+    useEffect(() => {
         waitForTasks(song.id, response => {
             handleNewTask(response);
-        });
-    };
+        }, timerRef);
 
-    useEffect(waitForNext,[]);
+        return () => {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+            clearTimeout(timerRef.current);
+        }
+    }, [song.id]);
 
     const doTask = variables => {
-        process.doTask(task.id, variables, () => {waitForNext();});
+        process.doTask(task.id, variables, () => {
+            setTask(null);
+            waitForTasks(song.id, response => {
+                handleNewTask(response);
+            }, timerRef);
+        });
     };
 
     const TaskComponent = (task != null) ? getTaskComponent(task.taskDefinitionKey) : null;
@@ -45,16 +52,20 @@ function getTaskComponent(taskKey) {
     }
 }
 
-function waitForTasks(id, callback) {
+function waitForTasks(songId, callback, timerRef) {
     const startIntervalMs = 100;
     const pollIntervalMs = 1000;
 
-    const callApi = function () {
-        process.getTasks(id,
-            (tasks) => {callback(tasks[0])},
-            () => {setTimeout(callApi, pollIntervalMs)});
+    const callApi = () => {
+        process.getSongTasks(songId,
+            (tasks) => {
+                callback(tasks[0])
+            },
+            () => {
+                timerRef.current = setTimeout(callApi, pollIntervalMs);
+            });
     };
-    setTimeout(callApi, startIntervalMs);
+    timerRef.current = setTimeout(callApi, startIntervalMs);
 }
 
 export default TaskHandler;
