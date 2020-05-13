@@ -6,7 +6,7 @@ function SongList(props) {
     const [songs, setSongs] = useState(null);
 
     useEffect(() => {
-        process.getSongs(songs => {
+        process.getSongs().then((songs) => {
             setSongs(songs);
         })
     }, []);

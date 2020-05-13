@@ -25,7 +25,7 @@ function TaskHandler({song}) {
     }, [song.id]);
 
     const doTask = variables => {
-        process.doTask(task.id, variables, () => {
+        process.doTask(task.id, variables).then(() => {
             setTask(null);
             waitForTasks(song.id, response => {
                 handleNewTask(response);
@@ -57,12 +57,13 @@ function waitForTasks(songId, callback, timerRef) {
     const pollIntervalMs = 1000;
 
     const callApi = () => {
-        process.getSongTasks(songId,
-            (tasks) => {
-                callback(tasks[0])
-            },
-            () => {
-                timerRef.current = setTimeout(callApi, pollIntervalMs);
+        process.getSongTasks(songId)
+            .then(tasks => {
+                if(tasks.length > 0) {
+                    callback(tasks[0])
+                } else {
+                    timerRef.current = setTimeout(callApi, pollIntervalMs);
+                }
             });
     };
     timerRef.current = setTimeout(callApi, startIntervalMs);

@@ -6,7 +6,7 @@ function NewSong(props) {
     const [songName, setSongName] = useState('');
 
     const createSong = songName => {
-        process.createSong(songName, song => {
+        process.createSong(songName).then(song => {
             createHandler(song);
         });
     };

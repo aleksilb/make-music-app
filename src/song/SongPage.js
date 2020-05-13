@@ -7,7 +7,8 @@ function SongPage(props) {
     const songSelectHandler = props.songSelectHandler;
 
     const startSong = song => {
-        process.startSong(song.id, () => {songSelectHandler(song)});
+        process.startSong(song.id)
+            .then(() => {songSelectHandler(song)});
     }
 
     return <div>
