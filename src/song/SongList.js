@@ -15,11 +15,14 @@ function SongList(props) {
         songSelectHandler(song);
     };
 
-    return <div>
-        {songs != null ?
-            <ul>{songs.map(song => {return <li key={song.id} onClick={selectSong.bind(this, song)}>{song.name}</li>})}</ul> : null
-        }
-    </div>
+    return songs != null ?
+        <table>
+            <tbody>
+            {songs.map(song => {return <tr key={song.id} onClick={selectSong.bind(this, song)}>
+                    <td>{song.name}</td><td>{song.status}</td></tr>})}
+            </tbody>
+        </table>
+        : null
 }
 
 export default SongList;
