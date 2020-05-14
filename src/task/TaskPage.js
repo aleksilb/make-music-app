@@ -1,19 +1,19 @@
 import React, {useState} from 'react';
 import TaskHandler from "./TaskHandler";
 
-function TaskPage(props) {
+function TaskPage({song, songStopHandler}) {
     const [active, setActive] = useState(true);
 
     const stopSong = () => {
         setActive(false);
-        props.songStopHandler();
+        songStopHandler();
     }
 
     return (
         <div>
-            <div>Song: {props.song.name}</div>
+            <div>Song: {song.name}</div>
             <button onClick={stopSong}>Stop doing this song</button>
-            <TaskHandler song={props.song} active={active}/>
+            <TaskHandler song={song} active={active}/>
         </div>
     );
 }

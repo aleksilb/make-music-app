@@ -25,12 +25,13 @@ function TaskHandler({song}) {
     }, [song.id]);
 
     const doTask = variables => {
-        process.doTask(task.id, variables).then(() => {
-            setTask(null);
-            waitForTasks(song.id, response => {
-                handleNewTask(response);
-            }, timerRef);
-        });
+        process.doTask(task.id, variables)
+            .then(() => {
+                setTask(null);
+                waitForTasks(song.id, response => {
+                    handleNewTask(response);
+                }, timerRef);
+            });
     };
 
     const TaskComponent = (task != null) ? getTaskComponent(task.taskDefinitionKey) : null;
@@ -59,7 +60,7 @@ function waitForTasks(songId, callback, timerRef) {
     const callApi = () => {
         process.getSongTasks(songId)
             .then(tasks => {
-                if(tasks.length > 0) {
+                if (tasks.length > 0) {
                     callback(tasks[0])
                 } else {
                     timerRef.current = setTimeout(callApi, pollIntervalMs);

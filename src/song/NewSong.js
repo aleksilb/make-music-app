@@ -1,8 +1,7 @@
 import React, {useState} from "react";
 import * as process from "../process";
 
-function NewSong(props) {
-    const createHandler = props.createHandler;
+function NewSong({createHandler}) {
     const [songName, setSongName] = useState('');
 
     const createSong = songName => {

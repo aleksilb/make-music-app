@@ -1,17 +1,17 @@
 import React from "react";
 import NumberButtons from "../ui/NumberButtons";
 
-export function StartMakingLoopsTask(props) {
-    return <button onClick={props.doTask.bind(this, null)}>Start making loops</button>
+export function StartMakingLoopsTask({doTask}) {
+    return <button onClick={doTask.bind(this, null)}>Start making loops</button>
 }
 
-export function ChooseBestTask(props) {
-    return <button onClick={props.doTask.bind(this, null)}>Choose best loop</button>
+export function ChooseBestTask({doTask}) {
+    return <button onClick={doTask.bind(this, null)}>Choose best loop</button>
 }
 
-export function HowManyLoopsTask(props) {
+export function HowManyLoopsTask({doTask}) {
     const numberHandler = number => {
-        props.doTask({
+        doTask({
             "variables":
                 {"loops": {"value": number}}
         });
@@ -20,9 +20,9 @@ export function HowManyLoopsTask(props) {
     return <div>How many loops did you make? <NumberButtons handler={numberHandler} amount="10"/></div>
 }
 
-export function DeleteLoopsTask(props) {
+export function DeleteLoopsTask({doTask}) {
     const numberHandler = number => {
-        props.doTask({
+        doTask({
             "variables":
                 {"deleted": {"value": number}}
         });

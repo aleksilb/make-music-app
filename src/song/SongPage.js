@@ -3,8 +3,7 @@ import SongList from "./SongList";
 import NewSong from "./NewSong";
 import * as process from "../process";
 
-function SongPage(props) {
-    const songSelectHandler = props.songSelectHandler;
+function SongPage({songSelectHandler}) {
 
     const startSong = song => {
         process.startSong(song.id)
