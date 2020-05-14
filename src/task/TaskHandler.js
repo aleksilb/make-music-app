@@ -3,7 +3,7 @@ import plingSound from "../pling.wav";
 import * as process from "../process";
 import {HowManyLoopsTask, StartMakingLoopsTask, ChooseBestTask, DeleteLoopsTask} from "./Tasks";
 
-function TaskHandler({song}) {
+function TaskHandler({song, updateSongHandler}) {
     const [task, setTask] = useState(null);
     const timerRef = useRef(null);
 
@@ -31,6 +31,7 @@ function TaskHandler({song}) {
                 waitForTasks(song.id, response => {
                     handleNewTask(response);
                 }, timerRef);
+                updateSongHandler();
             });
     };
 
