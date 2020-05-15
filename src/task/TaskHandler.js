@@ -35,12 +35,12 @@ function TaskHandler({song, updateSongHandler}) {
             });
     };
 
-    const TaskComponent = (task != null) ? getTaskComponent(task.taskDefinitionKey) : null;
+    const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
     return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask}/> : "Waiting for next task"}</div>
 }
 
-function getTaskComponent(taskKey) {
-    switch (taskKey) {
+function getTaskComponent(formKey) {
+    switch (formKey) {
         case 'how-many-loops':
             return HowManyLoopsTask;
         case 'start-making-loops':
