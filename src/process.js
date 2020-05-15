@@ -51,3 +51,11 @@ export function getSong(id) {
     return fetch(API_URL + "/song/"+ id)
         .then(res => res.json());
 }
+
+export function deleteSong(id) {
+    const callProperties = {
+        method: 'DELETE'
+    };
+
+    return fetch(API_URL + "/song/" + id, callProperties);
+}
