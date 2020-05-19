@@ -6,6 +6,8 @@ function NewSong({createHandler}) {
 
     const createSong = songName => {
         process.createSong(songName).then(song => {
+            return process.getSong(song.id);
+        }).then(song => {
             createHandler(song);
         });
     };

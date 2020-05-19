@@ -35,25 +35,25 @@ function TaskHandler({song, updateSongHandler}) {
             });
     };
 
-    const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
-    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask} /> : "Waiting for next task"}</div>
-}
-
-function getTaskComponent(formKey) {
-    switch (formKey) {
-        case 'how-many-loops':
-            return HowManyLoopsTask;
-        case 'start-making-loops':
-            return StartMakingLoopsTask;
-        case 'choose-best':
-            return ChooseBestTask;
-        case 'delete-loops':
-            return DeleteLoopsTask;
-        case 'choose-instrument':
-            return ChooseInstrument;
-        default:
-            return null;
+    const getTaskComponent = formKey => {
+        switch (formKey) {
+            case 'how-many-loops':
+                return HowManyLoopsTask;
+            case 'start-making-loops':
+                return StartMakingLoopsTask;
+            case 'choose-best':
+                return ChooseBestTask;
+            case 'delete-loops':
+                return DeleteLoopsTask;
+            case 'choose-instrument':
+                return ChooseInstrument;
+            default:
+                return null;
+        }
     }
+
+    const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
+    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask} song={song} /> : "Waiting for next task"}</div>
 }
 
 function waitForTasks(songId, callback, timerRef) {

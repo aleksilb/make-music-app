@@ -30,21 +30,24 @@ export function DeleteLoopsTask({doTask}) {
     return <div>How many loops did you delete? <NumberButtons handler={numberHandler} amount="10"/></div>
 }
 
-export function ChooseInstrument({doTask}) {
+export function ChooseInstrument({doTask, song}) {
     const [instruments, setInstruments] = useState([]);
 
     const choose = instrument => {
         doTask({
-            selected_instrument: instrument
+            selectedInstrument: instrument
         })
     }
 
     useEffect(() =>{
         process.getInstruments()
             .then(instruments =>{
+                instruments.filter(instrument => {
+                    return !song.instruments.includes(instrument)
+                });
                 setInstruments(instruments)
             })
-    }, []);
+    }, [song]);
 
 
     return <div>
