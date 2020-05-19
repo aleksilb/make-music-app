@@ -10,6 +10,30 @@ export function ChooseBestTask({doTask}) {
     return <button onClick={doTask.bind(this, null)}>Choose best loop</button>
 }
 
+export function AddMoreInstruments({doTask, song}) {
+    const yesHandler = () => {
+        doTask({
+            moreInstruments: true
+        })
+    }
+
+    const noHandler = () => {
+        doTask({
+            moreInstruments: false
+        })
+    }
+
+    return <div>
+        Current instruments:
+        <ul>
+            {song.instruments.map(instrument => <li>{instrument.type}</li>)}
+        </ul>
+        Add more instruments?
+        <button onClick={yesHandler}>Yes</button>
+        <button onClick={noHandler}>No</button>
+    </div>
+}
+
 export function HowManyLoopsTask({doTask}) {
     const numberHandler = number => {
         doTask({
@@ -41,11 +65,12 @@ export function ChooseInstrument({doTask, song}) {
 
     useEffect(() =>{
         process.getInstruments()
-            .then(instruments =>{
-                instruments.filter(instrument => {
-                    return !song.instruments.includes(instrument)
+            .then(instruments => {
+                instruments = instruments.filter(instrument => {
+                    return song.instruments.find(
+                        songInstrument => {return songInstrument.type === instrument.type}) == null;
                 });
-                setInstruments(instruments)
+                setInstruments(instruments);
             })
     }, [song]);
 

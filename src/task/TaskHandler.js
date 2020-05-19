@@ -1,7 +1,14 @@
 import React, {useEffect, useRef, useState} from "react";
 import plingSound from "../pling.wav";
 import * as process from "../process";
-import {HowManyLoopsTask, StartMakingLoopsTask, ChooseBestTask, DeleteLoopsTask, ChooseInstrument} from "./Tasks";
+import {
+    HowManyLoopsTask,
+    StartMakingLoopsTask,
+    ChooseBestTask,
+    DeleteLoopsTask,
+    ChooseInstrument,
+    AddMoreInstruments
+} from "./Tasks";
 
 function TaskHandler({song, updateSongHandler}) {
     const [task, setTask] = useState(null);
@@ -47,6 +54,8 @@ function TaskHandler({song, updateSongHandler}) {
                 return DeleteLoopsTask;
             case 'choose-instrument':
                 return ChooseInstrument;
+            case 'add-more-instruments':
+                return AddMoreInstruments;
             default:
                 return null;
         }
