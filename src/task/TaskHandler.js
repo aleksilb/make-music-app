@@ -1,7 +1,7 @@
 import React, {useEffect, useRef, useState} from "react";
 import plingSound from "../pling.wav";
 import * as process from "../process";
-import {HowManyLoopsTask, StartMakingLoopsTask, ChooseBestTask, DeleteLoopsTask} from "./Tasks";
+import {HowManyLoopsTask, StartMakingLoopsTask, ChooseBestTask, DeleteLoopsTask, ChooseInstrument} from "./Tasks";
 
 function TaskHandler({song, updateSongHandler}) {
     const [task, setTask] = useState(null);
@@ -36,7 +36,7 @@ function TaskHandler({song, updateSongHandler}) {
     };
 
     const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
-    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask}/> : "Waiting for next task"}</div>
+    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask} /> : "Waiting for next task"}</div>
 }
 
 function getTaskComponent(formKey) {
@@ -49,6 +49,8 @@ function getTaskComponent(formKey) {
             return ChooseBestTask;
         case 'delete-loops':
             return DeleteLoopsTask;
+        case 'choose-instrument':
+            return ChooseInstrument;
         default:
             return null;
     }

@@ -24,7 +24,16 @@ export function createSong(name) {
 }
 
 export function doTask(taskId, variables) {
-    const body = variables != null ? JSON.stringify(variables) : null;
+    let body = null;
+    if(variables != null) {
+        const camundaVars = {};
+
+        for(let [name, value] of Object.entries(variables)) {
+            camundaVars[name] = {value: value};
+        }
+
+        body = JSON.stringify({variables: camundaVars});
+    }
 
     const callProperties = {
         method: 'POST',
@@ -58,4 +67,9 @@ export function deleteSong(id) {
     };
 
     return fetch(API_URL + "/song/" + id, callProperties);
+}
+
+export async function getInstruments() {
+    return fetch(API_URL + "/instrument")
+        .then(res => res.json());
 }
