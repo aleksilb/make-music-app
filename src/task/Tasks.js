@@ -26,7 +26,7 @@ export function AddMoreInstruments({doTask, song}) {
     return <div>
         Current instruments:
         <ul>
-            {song.instruments.map(instrument => <li>{instrument.type}</li>)}
+            {song.instruments.map(instrument => <li key={instrument.type}>{instrument.type}</li>)}
         </ul>
         Add more instruments?
         <button onClick={yesHandler}>Yes</button>
@@ -78,7 +78,7 @@ export function ChooseInstrument({doTask, song}) {
     return <div>
         Choose instrument
     <ul>
-        {instruments.map(instrument => <li onClick={choose.bind(this, instrument.type)}>{instrument.type}</li>)}
+        {instruments.map(instrument => <li key={instrument.type} onClick={choose.bind(this, instrument.type)}>{instrument.type}</li>)}
     </ul>
     </div>
 }
