@@ -10,34 +10,52 @@ import {
     AddMoreInstruments
 } from "./Tasks";
 
+function playAlarm() {
+    let audio = new Audio(plingSound);
+    audio.play();
+}
+
 function TaskHandler({song, updateSongHandler}) {
     const [task, setTask] = useState(null);
+    const [reminder, setReminder] = useState(false);
     const timerRef = useRef(null);
 
-    const handleNewTask = newTask => {
-        setTask(newTask);
-        let audio = new Audio(plingSound);
-        audio.play();
-    };
-
     useEffect(() => {
-        waitForTasks(song.id, response => {
-            handleNewTask(response);
-        }, timerRef);
+        // const REMINDER_TIME = 5 * 60 * 1000;
+        const REMINDER_TIME = 10 * 1000;
+        const REMINDER_HIDE_TIME = 5 * 1000;
+        let hideReminderTimer = null;
+        let showReminderTimer = null;
+        setReminder(false);
+
+        const remind = () => {
+            playAlarm();
+            setReminder(true);
+            hideReminderTimer = setTimeout(() => setReminder(false), REMINDER_HIDE_TIME);
+            showReminderTimer = setTimeout(remind, REMINDER_TIME);
+        }
+
+        if (task == null) {
+            waitForTasks(song.id, newTask => {
+                setTask(newTask);
+            }, timerRef);
+        } else {
+            playAlarm();
+            showReminderTimer = setTimeout(remind, REMINDER_TIME);
+        }
 
         return () => {
             // eslint-disable-next-line react-hooks/exhaustive-deps
             clearTimeout(timerRef.current);
+            clearTimeout(showReminderTimer);
+            clearTimeout(hideReminderTimer);
         }
-    }, [song.id]);
+    }, [song.id, task]);
 
     const doTask = variables => {
         process.doTask(task.id, variables)
             .then(() => {
                 setTask(null);
-                waitForTasks(song.id, response => {
-                    handleNewTask(response);
-                }, timerRef);
                 updateSongHandler();
             });
     };
@@ -62,7 +80,7 @@ function TaskHandler({song, updateSongHandler}) {
     }
 
     const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
-    return <div>{(TaskComponent != null) ? <TaskComponent doTask={doTask} song={song} /> : "Waiting for next task"}</div>
+    return <div>{reminder ? <div>Back to work!</div> : null}{(TaskComponent != null) ? <TaskComponent doTask={doTask} song={song} /> : "Waiting for next task"}</div>
 }
 
 function waitForTasks(songId, callback, timerRef) {
