@@ -21,8 +21,8 @@ function TaskHandler({song, updateSongHandler}) {
     const timerRef = useRef(null);
 
     useEffect(() => {
-        // const REMINDER_TIME = 5 * 60 * 1000;
-        const REMINDER_TIME = 10 * 1000;
+        const REMINDER_TIME = 5 * 60 * 1000;
+        // const REMINDER_TIME = 10 * 1000;
         const REMINDER_HIDE_TIME = 5 * 1000;
         let hideReminderTimer = null;
         let showReminderTimer = null;

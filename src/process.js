@@ -73,3 +73,13 @@ export async function getInstruments() {
     return fetch(API_URL + "/instrument")
         .then(res => res.json());
 }
+
+export function updateSong(song) {
+    const callProperties = {
+        method: 'PUT',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(song)
+    }
+
+    return fetch(API_URL + "/song/"+song.id, callProperties);
+}
