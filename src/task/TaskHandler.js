@@ -7,7 +7,8 @@ import {
     ChooseBestTask,
     DeleteLoopsTask,
     ChooseInstrument,
-    AddMoreInstruments
+    AddMoreInstruments,
+    MakeMoreScenes
 } from "./Tasks";
 
 function playAlarm() {
@@ -74,6 +75,8 @@ function TaskHandler({song, updateSongHandler}) {
                 return ChooseInstrument;
             case 'add-more-instruments':
                 return AddMoreInstruments;
+            case 'make-more-scenes':
+                return MakeMoreScenes;
             default:
                 return null;
         }

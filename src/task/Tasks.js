@@ -34,6 +34,26 @@ export function AddMoreInstruments({doTask, song}) {
     </div>
 }
 
+export function MakeMoreScenes({doTask}) {
+    const yesHandler = () => {
+        doTask({
+            moreScenes: true
+        })
+    }
+
+    const noHandler = () => {
+        doTask({
+            moreScenes: false
+        })
+    }
+
+    return <div>
+        Make more scenes?
+        <button onClick={yesHandler}>Yes</button>
+        <button onClick={noHandler}>No</button>
+    </div>
+}
+
 export function HowManyLoopsTask({doTask}) {
     const numberHandler = number => {
         doTask({
