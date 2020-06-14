@@ -83,7 +83,7 @@ function TaskHandler({song, updateSongHandler}) {
     }
 
     const TaskComponent = (task != null) ? getTaskComponent(task.formKey) : null;
-    return <div>{reminder ? <div>Back to work!</div> : null}{(TaskComponent != null) ? <TaskComponent doTask={doTask} song={song} /> : "Waiting for next task"}</div>
+    return <div>{reminder ? <div>Back to work!</div> : null}{(TaskComponent != null) ? <TaskComponent doTask={doTask} song={song} task={task}/> : "Waiting for next task"}</div>
 }
 
 function waitForTasks(songId, callback, timerRef) {
@@ -91,10 +91,10 @@ function waitForTasks(songId, callback, timerRef) {
     const pollIntervalMs = 1000;
 
     const callApi = () => {
-        process.getSongTasks(songId)
-            .then(tasks => {
-                if (tasks.length > 0) {
-                    callback(tasks[0])
+        process.getNextTask(songId)
+            .then(task => {
+                if(task !== null) {
+                    callback(task);
                 } else {
                     timerRef.current = setTimeout(callApi, pollIntervalMs);
                 }

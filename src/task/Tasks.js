@@ -2,14 +2,6 @@ import React, {useEffect, useState} from "react";
 import NumberButtons from "../ui/NumberButtons";
 import * as process from '../process.js';
 
-export function StartMakingLoopsTask({doTask}) {
-    return <button onClick={doTask.bind(this, null)}>Start making loops</button>
-}
-
-export function ChooseBestTask({doTask}) {
-    return <button onClick={doTask.bind(this, null)}>Choose best loop</button>
-}
-
 export function AddMoreInstruments({doTask, song}) {
     const yesHandler = () => {
         doTask({
@@ -101,4 +93,8 @@ export function ChooseInstrument({doTask, song}) {
         {instruments.map(instrument => <li key={instrument.type} onClick={choose.bind(this, instrument.type)}>{instrument.type}</li>)}
     </ul>
     </div>
+}
+
+export function SimpleTask({doTask, task}) {
+    return <button onClick={doTask.bind(this, null)}>{task.variables.taskText.value}</button>
 }

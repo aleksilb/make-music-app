@@ -51,6 +51,29 @@ export function getSongTasks(songId) {
         .then(res => res.json());
 }
 
+export function getTaskVariables(taskId) {
+    return fetch(CAMUNDA_API_URL + "/task/"+taskId+"/form-variables")
+        .then(res => res.json());
+}
+
+export function getNextTask(songId) {
+    let task = null;
+
+    return getSongTasks(songId)
+        .then(tasks => {
+            if (tasks.length > 0) {
+                task = tasks[0];
+                return getTaskVariables(task.id);
+            } else {
+                throw new Error("No tasks");
+            }
+        })
+        .then(variables => {
+            task.variables = variables;
+            return task;
+        });
+}
+
 export function getSongs() {
     return fetch(API_URL + "/song")
         .then(res => res.json());
