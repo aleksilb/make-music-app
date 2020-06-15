@@ -3,12 +3,10 @@ import plingSound from "../pling.wav";
 import * as process from "../process";
 import {
     HowManyLoopsTask,
-    StartMakingLoopsTask,
-    ChooseBestTask,
     DeleteLoopsTask,
     ChooseInstrument,
     AddMoreInstruments,
-    MakeMoreScenes
+    MakeMoreScenes, SimpleTask
 } from "./Tasks";
 
 function playAlarm() {
@@ -63,12 +61,10 @@ function TaskHandler({song, updateSongHandler}) {
 
     const getTaskComponent = formKey => {
         switch (formKey) {
+            case 'simple-task':
+                return SimpleTask;
             case 'how-many-loops':
                 return HowManyLoopsTask;
-            case 'start-making-loops':
-                return StartMakingLoopsTask;
-            case 'choose-best':
-                return ChooseBestTask;
             case 'delete-loops':
                 return DeleteLoopsTask;
             case 'choose-instrument':
