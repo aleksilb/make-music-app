@@ -71,6 +71,8 @@ export function getNextTask(songId) {
         .then(variables => {
             task.variables = variables;
             return task;
+        }).catch(() => {
+            return null;
         });
 }
 
