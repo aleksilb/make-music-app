@@ -2,11 +2,9 @@ import React, {useEffect, useRef, useState} from "react";
 import plingSound from "../pling.wav";
 import * as process from "../process";
 import {
-    HowManyLoopsTask,
-    DeleteLoopsTask,
-    ChooseInstrument,
+    ChooseInstrumentType,
     AddMoreInstruments,
-    MakeMoreScenes, SimpleTask
+    MakeMoreScenes, SimpleTask, YesNoTask
 } from "./Tasks";
 
 function playAlarm() {
@@ -63,12 +61,10 @@ function TaskHandler({song, updateSongHandler}) {
         switch (formKey) {
             case 'simple-task':
                 return SimpleTask;
-            case 'how-many-loops':
-                return HowManyLoopsTask;
-            case 'delete-loops':
-                return DeleteLoopsTask;
-            case 'choose-instrument':
-                return ChooseInstrument;
+            case 'yes-no-task':
+                return YesNoTask;
+            case 'choose-instrument-type':
+                return ChooseInstrumentType;
             case 'add-more-instruments':
                 return AddMoreInstruments;
             case 'make-more-scenes':

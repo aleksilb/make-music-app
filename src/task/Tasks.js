@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from "react";
-import NumberButtons from "../ui/NumberButtons";
 import * as process from '../process.js';
 
 export function AddMoreInstruments({doTask, song}) {
@@ -26,6 +25,26 @@ export function AddMoreInstruments({doTask, song}) {
     </div>
 }
 
+export function YesNoTask({doTask, task}) {
+    const yesHandler = () => {
+        doTask({
+            choice: true
+        })
+    }
+
+    const noHandler = () => {
+        doTask({
+            choice: false
+        })
+    }
+
+    return <div>
+        {task.variables.taskText.value}
+        <button onClick={yesHandler}>Yes</button>
+        <button onClick={noHandler}>No</button>
+    </div>
+}
+
 export function MakeMoreScenes({doTask}) {
     const yesHandler = () => {
         doTask({
@@ -46,27 +65,7 @@ export function MakeMoreScenes({doTask}) {
     </div>
 }
 
-export function HowManyLoopsTask({doTask}) {
-    const numberHandler = number => {
-        doTask({
-            loops: number
-        });
-    };
-
-    return <div>How many loops did you make? <NumberButtons handler={numberHandler} amount="10"/></div>
-}
-
-export function DeleteLoopsTask({doTask}) {
-    const numberHandler = number => {
-        doTask({
-            deleted: number
-        });
-    };
-
-    return <div>How many loops did you delete? <NumberButtons handler={numberHandler} amount="10"/></div>
-}
-
-export function ChooseInstrument({doTask, song}) {
+export function ChooseInstrumentType({doTask, song}) {
     const [instruments, setInstruments] = useState([]);
 
     const choose = instrument => {
@@ -78,9 +77,11 @@ export function ChooseInstrument({doTask, song}) {
     useEffect(() =>{
         process.getInstruments()
             .then(instruments => {
-                instruments = instruments.filter(instrument => {
-                    return song.instruments.find(
-                        songInstrument => {return songInstrument.type === instrument.type}) == null;
+                instruments = instruments.map(instrument => {
+                    instrument.done = !!song.instruments.find(songInstrument => {
+                        return songInstrument.type === instrument.type
+                    });
+                    return instrument;
                 });
                 setInstruments(instruments);
             })
@@ -90,7 +91,7 @@ export function ChooseInstrument({doTask, song}) {
     return <div>
         Choose instrument
     <ul>
-        {instruments.map(instrument => <li key={instrument.type} onClick={choose.bind(this, instrument.type)}>{instrument.type}</li>)}
+        {instruments.map(instrument => <li key={instrument.type} onClick={choose.bind(this, instrument.type)}>{instrument.type} {instrument.done ? '*' : ''}</li>)}
     </ul>
     </div>
 }
