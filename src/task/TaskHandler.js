@@ -2,9 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import plingSound from "../pling.wav";
 import * as process from "../process";
 import {
-    ChooseInstrumentType,
-    AddMoreInstruments,
-    MakeMoreScenes, SimpleTask, YesNoTask
+    ChooseInstrumentType, SimpleTask, YesNoTask
 } from "./Tasks";
 
 function playAlarm() {
@@ -65,10 +63,6 @@ function TaskHandler({song, updateSongHandler}) {
                 return YesNoTask;
             case 'choose-instrument-type':
                 return ChooseInstrumentType;
-            case 'add-more-instruments':
-                return AddMoreInstruments;
-            case 'make-more-scenes':
-                return MakeMoreScenes;
             default:
                 return null;
         }

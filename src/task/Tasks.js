@@ -1,30 +1,6 @@
 import React, {useEffect, useState} from "react";
 import * as process from '../process.js';
 
-export function AddMoreInstruments({doTask, song}) {
-    const yesHandler = () => {
-        doTask({
-            moreInstruments: true
-        })
-    }
-
-    const noHandler = () => {
-        doTask({
-            moreInstruments: false
-        })
-    }
-
-    return <div>
-        Current instruments:
-        <ul>
-            {song.instruments.map(instrument => <li key={instrument.type}>{instrument.type}</li>)}
-        </ul>
-        Add more instruments?
-        <button onClick={yesHandler}>Yes</button>
-        <button onClick={noHandler}>No</button>
-    </div>
-}
-
 export function YesNoTask({doTask, task}) {
     const yesHandler = () => {
         doTask({
@@ -40,26 +16,6 @@ export function YesNoTask({doTask, task}) {
 
     return <div>
         {task.variables.taskText.value}
-        <button onClick={yesHandler}>Yes</button>
-        <button onClick={noHandler}>No</button>
-    </div>
-}
-
-export function MakeMoreScenes({doTask}) {
-    const yesHandler = () => {
-        doTask({
-            moreScenes: true
-        })
-    }
-
-    const noHandler = () => {
-        doTask({
-            moreScenes: false
-        })
-    }
-
-    return <div>
-        Make more scenes?
         <button onClick={yesHandler}>Yes</button>
         <button onClick={noHandler}>No</button>
     </div>
@@ -83,6 +39,9 @@ export function ChooseInstrumentType({doTask, song}) {
                     });
                     return instrument;
                 });
+                if(song.instruments.length > 0) {
+                    instruments.push({type:'NONE'});
+                }
                 setInstruments(instruments);
             })
     }, [song]);
