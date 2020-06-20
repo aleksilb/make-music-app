@@ -2,6 +2,7 @@ import React, {useState} from 'react';
 import SongPage from "./song/SongPage";
 import TaskPage from "./task/TaskPage";
 import * as process from "./process";
+import Alert from "./message/Alert";
 
 function App() {
     const [song, setSong] = useState(null);
@@ -29,6 +30,7 @@ function App() {
 
     return (
         <div className="App">
+            <Alert/>
             {song != null ?
                 <TaskPage song={song} songStopHandler={stopSong} updateSongHandler={updateSong}/> :
                 <SongPage songSelectHandler={songSelectHandler}/>}

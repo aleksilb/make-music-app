@@ -1,5 +1,9 @@
+import Stomp from "stompjs";
+import SockJS from "sockjs-client";
+
 const CAMUNDA_API_URL = "http://localhost:8010/proxy/rest";
 const API_URL = "http://localhost:8010/proxy";
+const WEBSOCKET_URL = 'http://localhost:8080/messages-websocket';
 
 export function startSong(id) {
     const callProperties = {
@@ -107,4 +111,18 @@ export function updateSong(song) {
     }
 
     return fetch(API_URL + "/song/"+song.id, callProperties);
+}
+
+export function onAlert(callback) {
+    const stompClient = Stomp.over(new SockJS(WEBSOCKET_URL));
+
+    const onReceive = message => {
+        const alert = JSON.parse(message.body);
+        callback(alert.message);
+    }
+
+    stompClient.connect({},
+        () => {
+            stompClient.subscribe('/topic/alert', onReceive);
+        });
 }
