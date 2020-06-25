@@ -2,13 +2,13 @@ import React, {useEffect, useState} from 'react';
 import * as process from "../process";
 import alertSound from "../pling.wav";
 
-function Alert() {
+function Alert({songId}) {
     const [alert, setAlert] = useState(null);
     let hideAlertTimer = null;
     const ALERT_HIDE_TIME = 5 * 1000;
 
     useEffect(() => {
-        process.onAlert(newAlert);
+        process.onAlert(songId, newAlert);
 
         return () => {
             clearTimeout(hideAlertTimer);

@@ -113,7 +113,7 @@ export function updateSong(song) {
     return fetch(API_URL + "/song/"+song.id, callProperties);
 }
 
-export function onAlert(callback) {
+export function onAlert(songId, callback) {
     const stompClient = Stomp.over(new SockJS(WEBSOCKET_URL));
 
     const onReceive = message => {
@@ -123,6 +123,6 @@ export function onAlert(callback) {
 
     stompClient.connect({},
         () => {
-            stompClient.subscribe('/topic/alert', onReceive);
+            stompClient.subscribe('/topic/alert/' + songId, onReceive);
         });
 }
