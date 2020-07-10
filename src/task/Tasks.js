@@ -34,10 +34,10 @@ export function ChooseInstrumentType({doTask, song}) {
         process.getInstruments()
             .then(instruments => {
                 instruments = instruments.map(instrument => {
-                    instrument.done = !!song.instruments.find(songInstrument => {
-                        return songInstrument.type === instrument.type
+                    const done = !!song.instruments.find(songInstrument => {
+                        return songInstrument === instrument
                     });
-                    return instrument;
+                    return {type: instrument, done: done};
                 });
                 if(song.instruments.length > 0) {
                     instruments.push({type:'NONE'});
